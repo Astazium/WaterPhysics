@@ -54,9 +54,7 @@ local function update_block(x, y, z)
     if level == 0 then return end
 
     -- Падение вниз
-    local is_water = block.get(x, y - 1, z) == WATER_ID and block.get_user_bits(x, y - 1, z, 0, 8)
-
-    if block.is_replaceable_at(x, y - 1, z) and not is_water then
+    if block.is_replaceable_at(x, y - 1, z) then
         if set_level(x, y - 1, z, MAX_LEVEL) then
             enqueue(next_tick, x, y - 1, z)
         end
@@ -69,9 +67,7 @@ local function update_block(x, y, z)
     -- Растекание по сторонам
     for _, n in ipairs(neighbors(x, y, z)) do
         local nx, ny, nz = n[1], n[2], n[3]
-        local is_water = block.get(nx, ny, nz) == WATER_ID and block.get_user_bits(nx, ny, nz, 0, 8)
-
-        if block.is_replaceable_at(nx, ny, nz) and level > 1 and not is_water then
+        if block.is_replaceable_at(nx, ny, nz) and level > 1 then
             local nlevel = get_level(nx, ny, nz)
             if nlevel + 2 <= level then
                 if set_level(nx, ny, nz, level - 1) then
